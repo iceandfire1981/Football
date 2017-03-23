@@ -47,7 +47,7 @@ public class App
         	return;
         }
         
-        is_success = GetTeamDataFromWeb.getAllTeamData(mMySqlConnection);
+        is_success = GetTeamDataFromWeb.getAllTeamData(mMySqlConnection, mConfigData.getTeamUrl(), mConfigData.getPagePrefix());
         if(!is_success) {
         	System.out.println("main::info::Get teams information false");
         	return;
