@@ -1,6 +1,6 @@
 package com.yunfin.Football.data;
 
-public final class TeamInfo {
+public class TeamInfo {
 	private String mTeamId, mTeamName;
 
 	public TeamInfo(String team_id, String team_name) {
