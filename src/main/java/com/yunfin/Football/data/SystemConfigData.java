@@ -1,6 +1,7 @@
 package com.yunfin.Football.data;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -156,10 +157,14 @@ public final class SystemConfigData {
 	}
 	
 	private boolean parserLeagueConfig(){
-		long begin_time = System.currentTimeMillis();
-		System.out.println("parserLeagueConfig::info::begin::time= " + begin_time);
 		SAXReader xml_reader = new SAXReader();
 		File config_file = new File(FootballSystemConfig.CONFIG_FILE_NAME);
+		try {
+			System.out.println("parserLeagueConfig::info::begin::path= " + config_file.getCanonicalPath());
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try {
 			Document xml_doc = xml_reader.read(config_file);
 			List<Element> children_elements = xml_doc.getRootElement().elements();
@@ -197,8 +202,7 @@ public final class SystemConfigData {
 			System.out.println("parserLeagueConfig::info::exception= " + e);
 			return false;
 		}
-		long end_time = System.currentTimeMillis();
-		System.out.println("parserLeagueConfig::info::end::time= " + end_time + " spend time= " + (end_time - begin_time));
+		System.out.println("parserLeagueConfig::info::end===================");
 		return true;
 	}
 	

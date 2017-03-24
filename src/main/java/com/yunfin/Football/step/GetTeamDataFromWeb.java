@@ -13,14 +13,13 @@ import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.yunfin.Football.data.TeamInfo;
 import com.yunfin.Football.data.TeamInfoExtra;
 import com.yunfin.Football.data.TeamOddData;
 import com.yunfin.Football.util.FootballUtils;
 
 public final class GetTeamDataFromWeb {
 	private static final String SQL_QUERY_TEAM_INFO = "select * from league_team_map";
-	private static final String SQL_INSERT_ODD_DATA = "insert into odd_data values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String SQL_INSERT_ODD_DATA = "insert into odd_data values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	public static boolean getAllTeamData(Connection mysql_connection, String team_base_address, String url_post_fix) {
 		ArrayList<TeamInfoExtra> all_team_infos = getTeamInfoFromDatabase(mysql_connection);
@@ -116,11 +115,11 @@ public final class GetTeamDataFromWeb {
 				}
 				
 				DomElement match_root_element = current_page.getElementById("div_Table2");
-				System.out.println("GetTeamDataFromWeb::getDataFromWeb::match_root_element= " + match_root_element.asText());
+				System.out.println("GetTeamDataFromWeb::getDataFromWeb::match_root_element= " + match_root_element.asText() + " children_size = " + match_root_element.getChildNodes().size());
 				DomNode match_table_node = match_root_element.getFirstChild();
-				System.out.println("GetTeamDataFromWeb::getDataFromWeb::match_table_node= " + match_table_node.asText());
+				System.out.println("GetTeamDataFromWeb::getDataFromWeb::match_table_node= " + match_table_node.asText() + " children_size = " + match_table_node.getChildNodes().size());
 				DomNode match_tbody_node = (DomElement) match_table_node.getFirstChild();
-				System.out.println("GetTeamDataFromWeb::getDataFromWeb::match_tbody_node= " + match_tbody_node.asText());
+				System.out.println("GetTeamDataFromWeb::getDataFromWeb::match_tbody_node= " + match_tbody_node.asText() + " children_size = " + match_tbody_node.getChildNodes().size());
 				ArrayList<TeamOddData> all_team_datas = getTeamOddDataFromCurrentPage(match_tbody_node);
 				System.out.println("GetTeamDataFromWeb::getDataFromWeb::datas= "
 						+ (null == all_team_datas ? "NULL" : all_team_datas.size()));
@@ -128,17 +127,18 @@ public final class GetTeamDataFromWeb {
 					for (TeamOddData current_odd : all_team_datas) {
 						System.out.println("GetTeamDataFromWeb::getDataFromWeb::insert::info= " + current_odd);
 						PreparedStatement ps = mysql_connection.prepareStatement(SQL_INSERT_ODD_DATA);
-						ps.setString(1, team_info.getLeagueId());
-						ps.setString(2, team_info.getTeamId());
-						ps.setString(3, team_info.getTeamName());
-						ps.setString(4, current_odd.getGameName());
-						ps.setString(5, current_odd.getGameDateTime());
-						ps.setString(6, current_odd.getHomeTeamName());
-						ps.setString(7, current_odd.getAwayTeamName());
-						ps.setString(8, current_odd.getFinalScore());
-						ps.setString(9, current_odd.getHalfScore());
-						ps.setString(10, current_odd.getPankou());
-						ps.setString(11, current_odd.getPanlu());
+						ps.setInt(1, 0);
+						ps.setString(2, team_info.getLeagueId());
+						ps.setString(3, team_info.getTeamId());
+						ps.setString(4, team_info.getTeamName());
+						ps.setString(5, current_odd.getGameName());
+						ps.setString(6, current_odd.getGameDateTime());
+						ps.setString(7, current_odd.getHomeTeamName());
+						ps.setString(8, current_odd.getAwayTeamName());
+						ps.setString(9, current_odd.getFinalScore());
+						ps.setString(10, current_odd.getHalfScore());
+						ps.setString(11, current_odd.getPankou());
+						ps.setString(12, current_odd.getPanlu());
 						int insert_result = ps.executeUpdate();
 						System.out.println("GetTeamDataFromWeb::getDataFromWeb::insert_result= " + insert_result);
 					}
@@ -161,7 +161,8 @@ public final class GetTeamDataFromWeb {
 	 * @return
 	 */
 	private static boolean hasNextPage(HtmlPage current_page) {
-		HtmlAnchor target_anchor = current_page.getAnchorByName("下一页");
+//		HtmlAnchor target_anchor = current_page.getAnchorByName("下一页");
+		HtmlAnchor target_anchor = current_page.getAnchorByText("下一页");
 		System.out.println("GetTeamDataFromWeb::hasNextPage= " + (null == target_anchor ? "not found!" : target_anchor.asText()));
 		if(null == target_anchor){
 			return false;
@@ -184,14 +185,18 @@ public final class GetTeamDataFromWeb {
 			return null;
 		} else {
 			ArrayList<TeamOddData> result_list = new ArrayList<TeamOddData>();
-			for(int index=1; index< node_list.size(); index++){
+			for(int index=2; index< node_list.size() - 1; index++){
 				DomNode current_node = node_list.get(index);// tr tag
+				
+				if(FootballUtils.isEmpty(current_node.asText()))
+					continue;
+				
 				System.out.println("GetTeamDataFromWeb::getTeamOddDataFromCurrentPage::current_node= " + current_node.asText());
 				DomNodeList<DomNode> all_children_node = current_node.getChildNodes();//all td tag
 				TeamOddData current_odd_data = new TeamOddData();
 				for(int children_index = 0; children_index < all_children_node.size(); children_index++){
 					DomNode current_children_node = all_children_node.get(children_index);
-					System.out.println("GetTeamDataFromWeb::getTeamOddDataFromCurrentPage::current_node= " + current_node.asText());
+					System.out.println("GetTeamDataFromWeb::getTeamOddDataFromCurrentPage::current_node= " + current_children_node.asText());
 					if(children_index == 0){
 						current_odd_data.setGameName(current_children_node.asText());
 					} else if(children_index == 1) {

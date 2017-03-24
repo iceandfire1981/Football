@@ -20,8 +20,7 @@ import com.yunfin.Football.util.FootballUtils;
 public final class GetTeamInAllLeagues {
 	
 	public static boolean getAllTeamInLeagues(Connection mysql_connection, SystemConfigData config_data){
-		long begin_time = System.currentTimeMillis();
-		System.out.println("GetTeamInAllLeagues::getAllTeamInLeagues::begin[" + begin_time + "]");
+		System.out.println("GetTeamInAllLeagues::getAllTeamInLeagues::begin==================================");
 		
 		String main_url = config_data.getMainUrl();
 		String seco_url = config_data.getSecondUrl();
@@ -32,6 +31,7 @@ public final class GetTeamInAllLeagues {
 				+ " leagues_size= " + ((null == all_leagues) ? "-1" : String.valueOf(all_leagues.size())));
 		
 		if(!ensureSystemConfig(main_url, seco_url, url_fix, all_leagues)){
+			System.out.println("GetTeamInAllLeagues::getAllTeamInLeagues::error::param is invaild");
 			return false;
 		}
 		
@@ -49,6 +49,7 @@ public final class GetTeamInAllLeagues {
 				}
 			}
 		}
+		System.out.println("GetTeamInAllLeagues::getAllTeamInLeagues::end===================");
 		return true;
 	}
 	
@@ -81,7 +82,7 @@ public final class GetTeamInAllLeagues {
 		}
 		
 		try{
-	    	Thread.sleep(5000);
+	    	Thread.sleep(2000);
 	    } catch(Exception e) {
 	    	e.printStackTrace();
 	    }

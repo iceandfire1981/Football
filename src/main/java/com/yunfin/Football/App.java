@@ -16,7 +16,6 @@ public class App
 	private static SystemConfigData mConfigData;
 	private static Connection mMySqlConnection;
 	
-	private static final String MYSQL_URL = "jdbc:mysql://47.90.55.236:3306/football";
 	
     public static void main( String[] args )
     {
