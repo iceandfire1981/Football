@@ -92,12 +92,6 @@ public final class GetTeamDataFromWeb {
 	
 	private static final boolean getDataFromWeb(Connection mysql_connection, TeamInfoExtra team_info, String current_url) {
 		System.out.println("GetTeamDataFromWeb::getDataFromWeb::url= " + current_url);
-		try{
-	    	Thread.sleep(5000);
-	    } catch(Exception e) {
-	    	e.printStackTrace();
-	    }
-		
 		WebClient wc = new WebClient(BrowserVersion.CHROME);
         wc.getOptions().setUseInsecureSSL(true);
         wc.getOptions().setJavaScriptEnabled(true); // 启用JS解释器，默认为true
@@ -113,6 +107,12 @@ public final class GetTeamDataFromWeb {
 				if(! is_first) {
 					current_page = current_page.getPage();
 				}
+				
+				try{
+			    	Thread.sleep(5000);
+			    } catch(Exception e) {
+			    	e.printStackTrace();
+			    }
 				
 				DomElement match_root_element = current_page.getElementById("div_Table2");
 				System.out.println("GetTeamDataFromWeb::getDataFromWeb::match_root_element= " + match_root_element.asText() + " children_size = " + match_root_element.getChildNodes().size());
