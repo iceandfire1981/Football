@@ -20,6 +20,7 @@ import com.yunfin.Football.util.FootballUtils;
 
 public final class GetTeamDataFromWeb {
 	private static final String SQL_QUERY_TEAM_INFO = "select * from league_team_map";
+	private static final String SQL_INSERT_ODD_DATA = "insert into odd_data values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	public static boolean getAllTeamData(Connection mysql_connection, String team_base_address, String url_post_fix) {
 		ArrayList<TeamInfoExtra> all_team_infos = getTeamInfoFromDatabase(mysql_connection);
@@ -90,7 +91,7 @@ public final class GetTeamDataFromWeb {
 		return url_buffer.toString();
 	}
 	
-	private static final boolean getDataFromWeb(Connection mysql_connect, TeamInfoExtra team_info, String current_url) {
+	private static final boolean getDataFromWeb(Connection mysql_connection, TeamInfoExtra team_info, String current_url) {
 		System.out.println("GetTeamDataFromWeb::getDataFromWeb::url= " + current_url);
 		try{
 	    	Thread.sleep(5000);
@@ -123,11 +124,29 @@ public final class GetTeamDataFromWeb {
 				ArrayList<TeamOddData> all_team_datas = getTeamOddDataFromCurrentPage(match_tbody_node);
 				System.out.println("GetTeamDataFromWeb::getDataFromWeb::datas= "
 						+ (null == all_team_datas ? "NULL" : all_team_datas.size()));
-				
+				if (null != all_team_datas && all_team_datas.size() > 0) {
+					for (TeamOddData current_odd : all_team_datas) {
+						System.out.println("GetTeamDataFromWeb::getDataFromWeb::insert::info= " + current_odd);
+						PreparedStatement ps = mysql_connection.prepareStatement(SQL_INSERT_ODD_DATA);
+						ps.setString(1, team_info.getLeagueId());
+						ps.setString(2, team_info.getTeamId());
+						ps.setString(3, team_info.getTeamName());
+						ps.setString(4, current_odd.getGameName());
+						ps.setString(5, current_odd.getGameDateTime());
+						ps.setString(6, current_odd.getHomeTeamName());
+						ps.setString(7, current_odd.getAwayTeamName());
+						ps.setString(8, current_odd.getFinalScore());
+						ps.setString(9, current_odd.getHalfScore());
+						ps.setString(10, current_odd.getPankou());
+						ps.setString(11, current_odd.getPanlu());
+						int insert_result = ps.executeUpdate();
+						System.out.println("GetTeamDataFromWeb::getDataFromWeb::insert_result= " + insert_result);
+					}
+				}
 				if(is_first)
 					is_first = false;
 			} while (hasNextPage(current_page));
-
+			return true;
         } catch(Exception e) {
         	e.printStackTrace();
         } finally {
