@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
@@ -19,6 +20,8 @@ import com.yunfin.Football.util.FootballUtils;
 
 public final class GetTeamDataFromWeb {
 	private static final String SQL_QUERY_TEAM_INFO = "select * from league_team_map";
+	private static final String SQL_DELETE_ALL_ODD_DATAS = "delete from odd_data";
+	private static final String SQL_DELETE_SOME_ODD_DATAS = "delete from odd_data where pan_lu = ''";
 	private static final String SQL_INSERT_ODD_DATA = "insert into odd_data values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	public static boolean getAllTeamData(Connection mysql_connection, String team_base_address, String url_post_fix) {
@@ -27,11 +30,30 @@ public final class GetTeamDataFromWeb {
 			return false;
 		}
 		
+		try {
+            PreparedStatement ps = mysql_connection.prepareStatement(SQL_DELETE_ALL_ODD_DATAS);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+		
 		for(TeamInfoExtra current_team_info : all_team_infos) {
 			System.out.println("GetTeamDataFromWeb::team_info= " + current_team_info);
 			getOneTeamData(mysql_connection, current_team_info, team_base_address, url_post_fix);
 		}
-		return false;
+		
+		try {
+            PreparedStatement ps = mysql_connection.prepareStatement(SQL_DELETE_SOME_ODD_DATAS);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+		
+		
+		
+		return true;
 	}
 	
 	/**
@@ -92,6 +114,13 @@ public final class GetTeamDataFromWeb {
 	
 	private static final boolean getDataFromWeb(Connection mysql_connection, TeamInfoExtra team_info, String current_url) {
 		System.out.println("GetTeamDataFromWeb::getDataFromWeb::url= " + current_url);
+		
+		try{
+            Thread.sleep(5000);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+		
 		WebClient wc = new WebClient(BrowserVersion.CHROME);
         wc.getOptions().setUseInsecureSSL(true);
         wc.getOptions().setJavaScriptEnabled(true); // 启用JS解释器，默认为true
@@ -193,6 +222,9 @@ public final class GetTeamDataFromWeb {
 				
 				System.out.println("GetTeamDataFromWeb::getTeamOddDataFromCurrentPage::current_node= " + current_node.asText());
 				DomNodeList<DomNode> all_children_node = current_node.getChildNodes();//all td tag
+				if(null == all_children_node || all_children_node.size() <= 1) 
+				    continue;
+				
 				TeamOddData current_odd_data = new TeamOddData();
 				for(int children_index = 0; children_index < all_children_node.size(); children_index++){
 					DomNode current_children_node = all_children_node.get(children_index);
