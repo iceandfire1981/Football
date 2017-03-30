@@ -25,4 +25,8 @@ public final class FootballSystemConfig {
 	
 	public static final String IS_MAIN_TRUE = "true";
 	public static final String IS_MAIN_FALSE = "false";
+	
+	public static final String PANLU_WIN = "0";
+	public static final String PANLU_LOST = "1";
+	public static final String PANLU_OTHER = "2";
 }

@@ -14,6 +14,7 @@ import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.yunfin.Football.config.FootballSystemConfig;
 import com.yunfin.Football.data.TeamInfoExtra;
 import com.yunfin.Football.data.TeamOddData;
 import com.yunfin.Football.util.FootballUtils;
@@ -167,7 +168,10 @@ public final class GetTeamDataFromWeb {
                         ps.setString(9, current_odd.getFinalScore());
                         ps.setString(10, current_odd.getHalfScore());
                         ps.setString(11, current_odd.getPankou());
-                        ps.setString(12, current_odd.getPanlu());
+                        
+                        String pan_lu  = ("赢".equals(current_odd.getPanlu()) ? FootballSystemConfig.PANLU_WIN : 
+                                        ("输".equals(current_odd.getPanlu()) ? FootballSystemConfig.PANLU_LOST : FootballSystemConfig.PANLU_OTHER));
+                        ps.setString(12, pan_lu);
                         int insert_result = ps.executeUpdate();
                         System.out.println("GetTeamDataFromWeb::getDataFromWeb::insert_result= " + insert_result);
                     }
