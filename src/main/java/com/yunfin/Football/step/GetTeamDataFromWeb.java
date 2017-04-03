@@ -52,8 +52,6 @@ public final class GetTeamDataFromWeb {
             e.printStackTrace();
         }
         
-        
-        
         return true;
     }
     
@@ -71,7 +69,6 @@ public final class GetTeamDataFromWeb {
                 System.out.println("GetTeamDataFromWeb::getTeamInfoFromDatabase::error::no record in league_team_map");
                 return null;
             }
-            
             
             ArrayList<TeamInfoExtra> all_team_infos = new ArrayList<TeamInfoExtra>();
             while(team_infos_rs.next()) {
@@ -117,7 +114,7 @@ public final class GetTeamDataFromWeb {
         System.out.println("GetTeamDataFromWeb::getDataFromWeb::url= " + current_url);
         
         try{
-            Thread.sleep(5000);
+            Thread.sleep(3000);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -133,13 +130,14 @@ public final class GetTeamDataFromWeb {
         try{
             HtmlPage current_page = wc.getPage(current_url);
             boolean is_first = true;
+            int page_number = 1;
             do {
                 if(! is_first) {
                     current_page = current_page.getPage();
                 }
                 
                 try{
-                    Thread.sleep(5000);
+                    Thread.sleep(1000);
                 } catch(Exception e) {
                     e.printStackTrace();
                 }
@@ -156,6 +154,12 @@ public final class GetTeamDataFromWeb {
                 if (null != all_team_datas && all_team_datas.size() > 0) {
                     for (TeamOddData current_odd : all_team_datas) {
                         System.out.println("GetTeamDataFromWeb::getDataFromWeb::insert::info= " + current_odd);
+                        
+                        if(FootballUtils.isEmpty(current_odd.getPanlu())){
+                            System.out.println("GetTeamDataFromWeb::getDataFromWeb::odd= " + current_odd + " ignorx============");
+                            continue;
+                        }
+                        
                         PreparedStatement ps = mysql_connection.prepareStatement(SQL_INSERT_ODD_DATA);
                         ps.setInt(1, 0);
                         ps.setString(2, team_info.getLeagueId());
@@ -178,7 +182,8 @@ public final class GetTeamDataFromWeb {
                 }
                 if(is_first)
                     is_first = false;
-            } while (hasNextPage(current_page));
+                page_number = page_number + 1;
+            } while (hasNextPage(current_page) && page_number <= 11);
             return true;
         } catch(Exception e) {
             e.printStackTrace();

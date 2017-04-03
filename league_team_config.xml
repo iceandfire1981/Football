@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system_config>
+    
+    <database_config>
+        <database_url value="jdbc:mysql://47.90.55.236:3306/football"/>
+        <database_user value="root"/>
+        <database_psd value="Safari12580@@"/>
+    </database_config>
+    
+    <address_config>
+        <main_address value="http://zq.win007.com/cn/League/"/>
+        <scon_address value="http://zq.win007.com/cn/SubLeague/"/>
+        <team_sche_address value="http://zq.win007.com/cn/team/TeamSche/"/>
+        <address_prefix value=".html"/>
+    </address_config>
+
+    <leagues_config>
+        <league id="2" name="ARG D1" is_main="false"/>
+        <league id="4" name="BRA D1" is_main="true"/>
+        <league id="8" name="GER D1" is_main="true"/>
+        <league id="9" name="GER D2" is_main="false"/>
+        <league id="11" name="FRA D1" is_main="true"/>
+        <league id="13" name="FIN D1" is_main="false"/>
+        <league id="16" name="HOL D1" is_main="false"/>
+        <league id="22" name="NOR D1" is_main="true"/>
+        <league id="26" name="SWE D1" is_main="false"/>
+        <league id="27" name="SUI Sl" is_main="true"/>
+        <league id="31" name="SPA D1" is_main="true"/>
+        <league id="33" name="SPA D2" is_main="false"/>
+        <league id="36" name="ENG PR" is_main="true"/>
+        <league id="37" name="ENG LCH" is_main="false"/>
+        <league id="34" name="ITA D1" is_main="true"/>
+        <league id="40" name="ITA D2" is_main="false"/>
+    </leagues_config>
+    
+</system_config>
+
+
