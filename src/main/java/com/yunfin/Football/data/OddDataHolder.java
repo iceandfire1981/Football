@@ -78,18 +78,19 @@ public class OddDataHolder {
     }
     
     private void processTeamData(){
-        for(int index = 0; index < mAllOddRecords.size(); index++) {
+        for(int index = 0; index < mAllOddRecords.size(); ) {
             OddDataInfo current_odd_data = mAllOddRecords.get(index);
             String current_odd_panlu = current_odd_data.getPanlu();
             ArrayList<OddDataInfo> process_odd_list = createProcessDataList(index, mAllOddRecords, current_odd_panlu);
             if (null == process_odd_list || process_odd_list.size() <= 0) {
                 System.out.println("OddDataHolder::processTeamData::info::not =================");
+                index = index + 1;
                 continue;
             }
             int input_money = 100;
             int finally_money = 180;
             if (null != process_odd_list && process_odd_list.size() > 0) {
-                for(int process_index = 0; process_index < process_odd_list.size(); process_index++){
+                for(int process_index = 0; process_index < process_odd_list.size(); process_index ++){
                     OddDataInfo current_odd_panlu_data = process_odd_list.get(process_index);
                     int target_input_monkey = input_money * (process_index + 1);
                     int target_finally_money = finally_money * (process_index + 1);
@@ -199,6 +200,10 @@ public class OddDataHolder {
                         }
                     } 
                 }
+                
+                index = index + mDataCount;
+            } else {
+                index = index + 1;
             }
         }
     }

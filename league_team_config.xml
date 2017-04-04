@@ -4,7 +4,7 @@
     <database_config>
         <database_url value="jdbc:mysql://47.90.55.236:3306/football"/>
         <database_user value="root"/>
-        <database_psd value="Safari12580@@"/>
+        <database_psd value=""/>
     </database_config>
     
     <address_config>

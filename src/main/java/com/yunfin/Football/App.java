@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 
 import com.yunfin.Football.data.SystemConfigData;
 import com.yunfin.Football.step.AnalysisProcess;
+import com.yunfin.Football.step.ExportUtils;
 import com.yunfin.Football.step.GetTeamDataFromWeb;
 import com.yunfin.Football.step.GetTeamInAllLeagues;
 
@@ -54,5 +55,7 @@ public class App
         }
         
         AnalysisProcess.processAnalysis(mMySqlConnection);
+        
+        ExportUtils.export2Excel(mMySqlConnection);
     }
 }

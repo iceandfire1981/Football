@@ -4,7 +4,7 @@
     <database_config>
         <database_url value="jdbc:mysql://47.90.55.236:3306/football"/>
         <database_user value="root"/>
-        <database_psd value="Safari12580@@"/>
+        <database_psd value=""/>
     </database_config>
     
     <address_config>
@@ -32,13 +32,15 @@
         <league id="34" name="ITA D1" is_main="true"/>
         <league id="40" name="ITA D2" is_main="false"/>
     </leagues_config>
-    
+
+<!-- 
     <process_config>
         <process_start_step>3</process_end_step>
         <process_end_step>5</process_end_step>
         <search_begin_deep>1</search_begin_deep>
         <search_end_deep>3</search_begin_deep>
     </process_config>
+-->
     
 </system_config>
 
