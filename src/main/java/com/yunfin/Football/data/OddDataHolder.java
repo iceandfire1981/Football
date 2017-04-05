@@ -84,7 +84,7 @@ public class OddDataHolder {
             ArrayList<OddDataInfo> process_odd_list = createProcessDataList(index, mAllOddRecords, current_odd_panlu);
             if (null == process_odd_list || process_odd_list.size() <= 0) {
                 System.out.println("OddDataHolder::processTeamData::info::not =================");
-                index = index + 1;
+                index = index + 1;//没有找到索引+1
                 continue;
             }
             int input_money = 100;
@@ -95,7 +95,7 @@ public class OddDataHolder {
                     int target_input_monkey = input_money * (process_index + 1);
                     int target_finally_money = finally_money * (process_index + 1);
                     if(FootballSystemConfig.PANLU_WIN.equals(current_odd_panlu)){//当前为赢盘
-                        if(FootballSystemConfig.PANLU_LOST.equals(current_odd_panlu_data.getPanlu())){//紧接着也输
+                        if(FootballSystemConfig.PANLU_LOST.equals(current_odd_panlu_data.getPanlu())){//紧接着输
                             //写入数据
                             try {
                                 PreparedStatement ps = mMySqlConnection.prepareStatement(INSERT_POLICY_RECORD);
@@ -105,13 +105,14 @@ public class OddDataHolder {
                                 ps.setString(4, current_odd_panlu_data.getMatchDateTime());
                                 ps.setDouble(5, target_input_monkey);
                                 ps.setDouble(6, target_finally_money);
-                                ps.setInt(7, 3);
+                                ps.setInt(7, mDataCount);
                                 ps.setInt(8, process_index + 1);
                                 ps.executeUpdate();
                             } catch (SQLException e) {
                                 // TODO Auto-generated catch block
                                 e.printStackTrace();
                             }
+                            
                             break;
                         } else if (FootballSystemConfig.PANLU_WIN.equals(current_odd_panlu_data.getPanlu())){
                             try {
@@ -122,7 +123,7 @@ public class OddDataHolder {
                                 ps.setString(4, current_odd_panlu_data.getMatchDateTime());
                                 ps.setDouble(5, target_input_monkey);
                                 ps.setDouble(6, 0);
-                                ps.setInt(7, 3);
+                                ps.setInt(7, mDataCount);
                                 ps.setInt(8, process_index + 1);
                                 ps.executeUpdate();
                             } catch (SQLException e) {
@@ -138,7 +139,7 @@ public class OddDataHolder {
                                 ps.setString(4, current_odd_panlu_data.getMatchDateTime());
                                 ps.setDouble(5, target_input_monkey);
                                 ps.setDouble(6, target_input_monkey);
-                                ps.setInt(7, 3);
+                                ps.setInt(7, mDataCount);
                                 ps.setInt(8, process_index + 1);
                                 ps.executeUpdate();
                             } catch (SQLException e) {
@@ -157,7 +158,7 @@ public class OddDataHolder {
                                 ps.setString(4, current_odd_panlu_data.getMatchDateTime());
                                 ps.setDouble(5, target_input_monkey);
                                 ps.setDouble(6, target_finally_money);
-                                ps.setInt(7, 3);
+                                ps.setInt(7, mDataCount);
                                 ps.setInt(8, process_index + 1);
                                 ps.executeUpdate();
                             } catch (SQLException e) {
@@ -174,7 +175,7 @@ public class OddDataHolder {
                                 ps.setString(4, current_odd_panlu_data.getMatchDateTime());
                                 ps.setDouble(5, target_input_monkey);
                                 ps.setDouble(6, 0);
-                                ps.setInt(7, 3);
+                                ps.setInt(7, mDataCount);
                                 ps.setInt(8, process_index + 1);
                                 ps.executeUpdate();
                             } catch (SQLException e) {
@@ -190,7 +191,7 @@ public class OddDataHolder {
                                 ps.setString(4, current_odd_panlu_data.getMatchDateTime());
                                 ps.setDouble(5, target_input_monkey);
                                 ps.setDouble(6, target_input_monkey);
-                                ps.setInt(7, 3);
+                                ps.setInt(7, mDataCount);
                                 ps.setInt(8, process_index + 1);
                                 ps.executeUpdate();
                             } catch (SQLException e) {
@@ -200,7 +201,6 @@ public class OddDataHolder {
                         }
                     } 
                 }
-                
                 index = index + mDataCount;
             } else {
                 index = index + 1;
